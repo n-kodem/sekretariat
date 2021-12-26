@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,10 @@ namespace sekretariat
     /// <summary>
     /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
+    ///
+    /// 
+    /// 
+    /// v0.0.1
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -32,7 +37,8 @@ namespace sekretariat
 
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-
+            // SqliteConnection sqlite_conn;
+            // SqliteCommand sqlite_cmd;
         }
     }
 }
