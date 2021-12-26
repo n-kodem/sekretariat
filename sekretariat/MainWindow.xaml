@@ -4,9 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:sekretariat"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="sekretariat.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" 
+        xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+
+        x:Class="sekretariat.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Title="MainWindow" Height="680" Width="800"
+        Background="{DynamicResource MaterialDesignBackground}"
+        Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        >
 
     <Window.CommandBindings>
         <CommandBinding Command="New" CanExecute="CommonCommandBinding_CanExecute" />
@@ -17,28 +32,58 @@
         <DockPanel>
             <ToolBarTray DockPanel.Dock="Top">
                 <ToolBar>
-                    <Button Command="New" Content="New" Click="onSubmit" IsEnabled="True"/>
-                    <Button Command="Open" Content="Open" />
-                    <Button Command="Save" Content="Save" />
-                </ToolBar>
-                <ToolBar>
-                    <Button Command="Cut" Content="Cut" />
-                    <Button Command="Copy" Content="Copy" />
-                    <Button Command="Paste" Content="Paste" />
+                    <Button Command="Cut" Content="Cut"/>
+                    <Button Command="Copy" Content="Copy"/>
+                    <Button Command="Paste" Content="Paste"/>
                 </ToolBar>
             </ToolBarTray>
-            <TextBox AcceptsReturn="True" />
         </DockPanel>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="383" VerticalAlignment="Top" Width="794" Margin="0,27,-0.4,0">
-            <TabItem Header="Dodaj">
-                <Grid>
-                    <Button x:Name="submitBtn" Content="Dodaj" Margin="119,253,551,65.2" Click="onSubmit"/>
-                    <ComboBox x:Name="comboBox" Margin="61,58,515,263.2" SelectionChanged="typeChange">
-                        <System:String>Pracownik</System:String>
-                        <System:String>Nauczyciel</System:String>
-                        <System:String>Uczeń</System:String>
-                    </ComboBox>
+        <TabControl Style="{StaticResource MaterialDesignTabControl}" x:Name="tabControl" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" Width="Auto" Margin="0,50,-0.4,0">
+            <TabItem Name="addPanel" Header="Dodaj">
+                <Grid RenderTransformOrigin="0.475,0.449" Height="545" Width="784">
+                    <materialDesign:Card Name="cardContainer" Margin="10" Width="764" Focusable="True" MouseDown="loseFocus">
+                        <Grid Name="container">
+                            <TextBox Name="imie" Height="40" Text="" materialDesign:HintAssist.Hint="Imię" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="37,77,397,407.8"/>
+                            <TextBox Name="druImie" Height="40" Text="" materialDesign:HintAssist.Hint="Drugię Imię" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,77,20,407.8"/>
+                            <TextBox Name="nazwisko" Height="40" Text="" materialDesign:HintAssist.Hint="Nazwisko" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="37,127,397,357.8"/>
+                            <TextBox Name="panNazwisko" Height="40" Text="" materialDesign:HintAssist.Hint="Nazwisko Panieńskie" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,127,20,357.8"/>
+                            <TextBox Name="imRodzicow" Height="40" Text="" materialDesign:HintAssist.Hint="Imiona Rodziców" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="37,172,397,312.8"/>
+                            <TextBox Name="pesel" Height="40" Text="" materialDesign:HintAssist.Hint="Pesel" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,217,20,267.8"/>
+                            <TextBox Name="zdjecie" Height="40" Text="" materialDesign:HintAssist.Hint="Zdjęcie" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="38,217,397,267.8"/>
 
+                            <TextBox Name="klasa" Height="40" Text="" materialDesign:HintAssist.Hint="Klasa" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,262,20,222.8"/>
+                            <TextBox Name="grupyJez" Height="40" Text="" materialDesign:HintAssist.Hint="Grupy Językowe" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="37,308,398,176.8"/>
+
+                            <TextBox Name="etat" Height="40" Text="" materialDesign:HintAssist.Hint="Etat" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="412,307,20,177.8"/>
+                            <TextBox Name="opisStan" Height="40" Text="" materialDesign:HintAssist.Hint="Opis Stanowiska" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="35,308,398,176.8"/>
+
+                            <TextBox Name="wychowawstwo" Height="40" Text="" materialDesign:HintAssist.Hint="Wychowawstwo" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="38,353,395,131.8"/>
+                            <TextBox Name="przedmiotyNau" Height="40" Text="" materialDesign:HintAssist.Hint="Przedmioty Nauczane" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,308,19,176.8"/>
+                            <TextBox Name="klasyZGodz" Height="40" Text="" materialDesign:HintAssist.Hint="Klasy z Godzinami" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="39,308,395,176.8"/>
+
+
+                            <DatePicker Name="dataUr" Height="40" Margin="38,262,397,222.8" materialDesign:HintAssist.Hint="Data Urodzenia" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5"></DatePicker>
+                            <DatePicker Name="dataZat" Height="40" Margin="413,262,20,222.8" materialDesign:HintAssist.Hint="Data Zatrudnienia" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5"></DatePicker>
+
+                            <ComboBox x:Name="plec" Height="35"
+                                      Margin="413,177,20,312.8" materialDesign:HintAssist.Hint="Płeć"
+                                      materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True"
+                                      materialDesign:HintAssist.HintOpacity="0.5">
+                                <System:String>Mężczyzna</System:String>
+                                <System:String>Kobieta</System:String>
+                            </ComboBox>
+
+                            <ComboBox x:Name="typeSelector" SelectionChanged="typeChange" Height="35"
+                                      Margin="219,10,225,479.8" materialDesign:HintAssist.Hint="Typ osoby"
+                                      materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True"
+                                      materialDesign:HintAssist.HintOpacity="0.5" Grid.ColumnSpan="2">
+                                <System:String>Pracownik</System:String>
+                                <System:String>Nauczyciel</System:String>
+                                <System:String>Uczeń</System:String>
+                            </ComboBox>
+                            <Button x:Name="submitBtn" Content="Dodaj" Click="onSubmit" Height="Auto" Margin="38,472,30,9.8" Grid.ColumnSpan="2"/>
+                        </Grid>
+                    </materialDesign:Card>
                 </Grid>
             </TabItem>
             <TabItem Header="Pracownicy">
@@ -50,7 +95,6 @@
             <TabItem Header="Uczniowie">
                 <Label Margin="100,50,10,10" Content="3 Content goes here"/>
             </TabItem>
-
 
         </TabControl>
     </Grid>
