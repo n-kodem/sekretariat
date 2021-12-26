@@ -40,5 +40,9 @@ namespace sekretariat
             // SqliteConnection sqlite_conn;
             // SqliteCommand sqlite_cmd;
         }
+        private void CommonCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
     }
 }

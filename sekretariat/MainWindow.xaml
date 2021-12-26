@@ -7,16 +7,38 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="sekretariat.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="CommonCommandBinding_CanExecute" />
+        <CommandBinding Command="Open" CanExecute="CommonCommandBinding_CanExecute" />
+        <CommandBinding Command="Save" CanExecute="CommonCommandBinding_CanExecute" />
+    </Window.CommandBindings>
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="410" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
+        <DockPanel>
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar>
+                    <Button Command="New" Content="New" Click="onSubmit" IsEnabled="True"/>
+                    <Button Command="Open" Content="Open" />
+                    <Button Command="Save" Content="Save" />
+                </ToolBar>
+                <ToolBar>
+                    <Button Command="Cut" Content="Cut" />
+                    <Button Command="Copy" Content="Copy" />
+                    <Button Command="Paste" Content="Paste" />
+                </ToolBar>
+            </ToolBarTray>
+            <TextBox AcceptsReturn="True" />
+        </DockPanel>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="383" VerticalAlignment="Top" Width="794" Margin="0,27,-0.4,0">
             <TabItem Header="Dodaj">
                 <Grid>
-                    <Button x:Name="submitBtn" Content="Dodaj" Margin="119,253,568,90.6" Click="onSubmit"/>
-                    <ComboBox x:Name="comboBox" Margin="61,58,514,284.6" SelectionChanged="typeChange">
+                    <Button x:Name="submitBtn" Content="Dodaj" Margin="119,253,551,65.2" Click="onSubmit"/>
+                    <ComboBox x:Name="comboBox" Margin="61,58,515,263.2" SelectionChanged="typeChange">
                         <System:String>Pracownik</System:String>
                         <System:String>Nauczyciel</System:String>
                         <System:String>Uczeń</System:String>
                     </ComboBox>
+
                 </Grid>
             </TabItem>
             <TabItem Header="Pracownicy">
@@ -28,6 +50,8 @@
             <TabItem Header="Uczniowie">
                 <Label Margin="100,50,10,10" Content="3 Content goes here"/>
             </TabItem>
+
+
         </TabControl>
     </Grid>
 </Window>
