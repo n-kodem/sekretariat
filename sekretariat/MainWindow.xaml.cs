@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MaterialDesignThemes.Wpf;
+using static sekretariat.selectorDialog;
 
 namespace sekretariat
 {
@@ -22,7 +24,7 @@ namespace sekretariat
     ///
     /// 
     /// 
-    /// v0.0.1
+    /// v0.0.3
 
 
     public partial class MainWindow : Window
@@ -36,10 +38,19 @@ namespace sekretariat
                     TextBox e = (TextBox)element;
                     e.Focusable = false;
                     e.Visibility = Visibility.Hidden;
+                    e.Text = "";
                 }
                 else if (element.GetType() == typeof(DatePicker))
                 {
                     DatePicker e = (DatePicker)element;
+                    e.Focusable = false;
+                    e.Visibility = Visibility.Hidden;
+                    e.SelectedDate = null;
+
+                }
+                else if (element.GetType() == typeof(Button))
+                {
+                    Button e = (Button)element;
                     e.Focusable = false;
                     e.Visibility = Visibility.Hidden;
 
@@ -51,6 +62,7 @@ namespace sekretariat
                     {
                         e.Focusable = false;
                         e.Visibility = Visibility.Hidden;
+                        e.SelectedIndex = -1;
                     }
                 }
             }
@@ -83,6 +95,9 @@ namespace sekretariat
 
             dataUr.Focusable = true;
             dataUr.Visibility = Visibility.Visible;
+
+            submitBtn.Focusable = true;
+            submitBtn.Visibility = Visibility.Visible;
 
             if (arg == "Pracownik")
             {
@@ -119,6 +134,59 @@ namespace sekretariat
             }
         }
 
+        private String generateInsertQuery()
+        {
+            string query = $"INSERT INTO {typeSelector.SelectedValue} ";
+
+            string rows = "(";
+            string values = "(";
+
+            foreach (var element in container.Children)
+            {
+                if (element.GetType() == typeof(TextBox))
+                {
+                    TextBox e = (TextBox)element;
+                    if (e.Text != "")
+                    {
+                        rows += $"{e.Name},";
+                        values+= $"{e.Text},";
+                    }
+                        
+                }
+                else if (element.GetType() == typeof(DatePicker))
+                {
+                    DatePicker e = (DatePicker)element;
+
+                    if(e.SelectedDate.HasValue)
+                    if (e.SelectedDate.Value.ToString() != "")
+                    {
+                        rows += $"{e.Name},";
+                        values+=$"{e.SelectedDate.Value.ToString()},";
+                    }
+                       
+
+                }
+                else if (element.GetType() == typeof(ComboBox))
+                {
+                    ComboBox e = (ComboBox)element;
+                    if (e.SelectedValue!=null)
+                    if (e.Name.ToString() != "typeSelector" && e.SelectedValue.ToString()!="")
+                    {
+                        rows += $"{e.Name},";
+                        values += $"{e.SelectedValue},";
+                    }
+                }
+            }
+            rows = rows.Remove(rows.Length - 1);
+            values = values.Remove(values.Length - 1);
+
+            rows += ")";
+            values += ")";
+
+            query += $"{rows} VALUES {values};";
+            return query;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -127,14 +195,21 @@ namespace sekretariat
 
         private void typeChange(object sender, SelectionChangedEventArgs e)
         {
-            hidePrompts();
-            ShowBoxes(typeSelector.SelectedValue.ToString());
+            if (typeSelector.SelectedIndex != -1) { 
+                hidePrompts();
+                ShowBoxes(typeSelector.SelectedValue.ToString());
+            }
+
+
+            
         }
 
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            // SqliteConnection sqlite_conn;
-            // SqliteCommand sqlite_cmd;
+            // TODO: Add validate function 
+            MessageBox.Show(generateInsertQuery(), "");
+            typeSelector.SelectedIndex = -1;
+            hidePrompts();
         }
         private void CommonCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
