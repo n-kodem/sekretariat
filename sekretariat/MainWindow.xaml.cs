@@ -19,6 +19,7 @@ using System.Data.SQLite;
 using System.Globalization;
 using Microsoft.Win32;
 using System.Drawing.Imaging;
+using System.Data;
 
 namespace sekretariat
 {
@@ -28,11 +29,50 @@ namespace sekretariat
     ///
     /// 
     /// 
-    /// v0.0.4
+    /// v0.0.5
 
 
     public partial class MainWindow : Window
     {
+        public class DefRow
+        {
+            public string imie { set; get; }
+            public string druImie { set; get; }
+            public string nazwisko { set; get; }
+            public string panNazwisko { set; get; }
+            public string imRodzicow { set; get; }
+            public BitmapImage zdjecie { set; get; }
+            public string strZdjecie { set; get; }
+            public string plec { set; get; }
+            public string pesel { set; get; }
+            public DateTime dataUr { set; get; }
+
+        }
+        public class WorkerRow : DefRow
+        {
+            public DateTime dataZat { set; get; }
+            public string opisStan { set; get; }
+            public string etat { set; get; }
+        }
+        public class TeacherRow : DefRow {
+            public DateTime dataZat { set; get; }
+            public string wychowawstwo { set; get; }
+            public string przedmiotyNau { set; get; }
+            public string klasyZGodz { set; get; }
+        }
+        public class StudentRow : DefRow
+        {
+            public string klasa { set; get; }
+            public string grupyJez { set; get; }
+        }
+        public DateTime parseDate(string arg)
+        {
+            if (arg != "")
+            {
+                return DateTime.Parse(arg);
+            }
+            return DateTime.MinValue;
+        }
         public string PathImageToBase64(string path)
         {
             System.Drawing.Image image = System.Drawing.Image.FromFile(path);
@@ -53,38 +93,116 @@ namespace sekretariat
         public BitmapImage Base64ToWPFImageSource(string base64String)
         {
             // Convert Base64 String to byte[]
-            MessageBox.Show(base64String.ToString(), "XD?");
-            byte[] imageBytes = Convert.FromBase64String(base64String);
+            if (base64String.ToString() != "")
+            {
+                byte[] imageBytes = Convert.FromBase64String(base64String);
 
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
 
-            MemoryStream ms = new MemoryStream(imageBytes, 0,
-              imageBytes.Length);
+                MemoryStream ms = new MemoryStream(imageBytes, 0,
+                  imageBytes.Length);
 
-            // Convert byte[] to Image
-            ms.Write(imageBytes, 0, imageBytes.Length);
+                // Convert byte[] to Image
+                ms.Write(imageBytes, 0, imageBytes.Length);
 
-            bi.StreamSource = new MemoryStream(imageBytes);
-            bi.EndInit();
+                bi.StreamSource = new MemoryStream(imageBytes);
+                bi.EndInit();
 
-            return bi;
+                return bi;
+            }
+            return new BitmapImage();
         }
-        public class WorkerRow
+        public void reloadTables()
         {
-            public string imie { set; get; }
-            public string druImie { set; get; }
-            public string nazwisko { set; get; }
-            public string panNazwisko { set; get; }
-            public string imRodzicow { set; get; }
-            public BitmapImage zdjecie { set; get; }
-            public string plec { set; get; }
-            public string pesel { set; get; }
-            public DateTime dataUr { set; get; }
-            public DateTime dataZat { set; get; }
-            public string opisStan { set; get; }
-            public string etat { set; get; }
+            var sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
+            sqlite_conn.Open();
+            var sqlite_cmd = sqlite_conn.CreateCommand();
 
+            // new data insertion (Automated)
+            sqlite_cmd.CommandText = "SELECT * FROM Pracownik;";
+            var read = sqlite_cmd.ExecuteReader();
+            List<WorkerRow> workers = new List<WorkerRow> { }; 
+            List<TeacherRow> teachers = new List<TeacherRow> { };
+            List<StudentRow> students = new List<StudentRow> { };
+            
+
+
+            while (read.Read())
+            {
+                workers.Add(new WorkerRow
+                {
+                    imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
+                    druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
+                    nazwisko = read.GetValue(read.GetOrdinal("nazwisko")).ToString(),
+                    panNazwisko = read.GetValue(read.GetOrdinal("panNazwisko")).ToString(),
+                    imRodzicow = read.GetValue(read.GetOrdinal("imRodzicow")).ToString(),
+                    zdjecie = Base64ToWPFImageSource(read.GetValue(read.GetOrdinal("zdjecie")).ToString()),
+                    strZdjecie = read.GetValue(read.GetOrdinal("zdjecie")).ToString(),
+                    plec = read.GetValue(read.GetOrdinal("plec")).ToString(),
+                    pesel = read.GetValue(read.GetOrdinal("pesel")).ToString(),
+                    dataUr = parseDate(read.GetValue(read.GetOrdinal("dataUr")).ToString()),
+                    dataZat = parseDate(read.GetValue(read.GetOrdinal("dataZat")).ToString()),
+                    opisStan = read.GetValue(read.GetOrdinal("opisStan")).ToString(),
+                    etat = read.GetValue(read.GetOrdinal("etat")).ToString()
+                });
+            }
+
+            //workersTable.Items.Clear();
+            
+            workersTable.ItemsSource = workers;
+
+            sqlite_cmd.Reset();
+            sqlite_cmd.CommandText = "SELECT * FROM Nauczyciel;";
+            read = sqlite_cmd.ExecuteReader();
+            while (read.Read())
+            {
+                teachers.Add(new TeacherRow
+                {
+                    imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
+                    druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
+                    nazwisko = read.GetValue(read.GetOrdinal("nazwisko")).ToString(),
+                    panNazwisko = read.GetValue(read.GetOrdinal("panNazwisko")).ToString(),
+                    imRodzicow = read.GetValue(read.GetOrdinal("imRodzicow")).ToString(),
+                    zdjecie = Base64ToWPFImageSource(read.GetValue(read.GetOrdinal("zdjecie")).ToString()),
+                    strZdjecie = read.GetValue(read.GetOrdinal("zdjecie")).ToString(),
+                    plec = read.GetValue(read.GetOrdinal("plec")).ToString(),
+                    pesel = read.GetValue(read.GetOrdinal("pesel")).ToString(),
+                    dataUr = parseDate(read.GetValue(read.GetOrdinal("dataUr")).ToString()),
+                    dataZat = parseDate(read.GetValue(read.GetOrdinal("dataZat")).ToString()),
+                    wychowawstwo = read.GetValue(read.GetOrdinal("wychowawstwo")).ToString(),
+                    przedmiotyNau = read.GetValue(read.GetOrdinal("przedmiotyNau")).ToString(),
+                    klasyZGodz = read.GetValue(read.GetOrdinal("klasyZGodz")).ToString()
+                });
+            }
+            //teachersTable.Items.Clear();
+            teachersTable.ItemsSource = teachers;
+
+            sqlite_cmd.Reset();
+            sqlite_cmd.CommandText = "SELECT * FROM Uczen;";
+            read = sqlite_cmd.ExecuteReader();
+            while (read.Read())
+            {
+                students.Add(new StudentRow
+                {
+                    imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
+                    druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
+                    nazwisko = read.GetValue(read.GetOrdinal("nazwisko")).ToString(),
+                    panNazwisko = read.GetValue(read.GetOrdinal("panNazwisko")).ToString(),
+                    imRodzicow = read.GetValue(read.GetOrdinal("imRodzicow")).ToString(),
+                    zdjecie = Base64ToWPFImageSource(read.GetValue(read.GetOrdinal("zdjecie")).ToString()),
+                    plec = read.GetValue(read.GetOrdinal("plec")).ToString(),
+                    pesel = read.GetValue(read.GetOrdinal("pesel")).ToString(),
+                    dataUr = parseDate(read.GetValue(read.GetOrdinal("dataUr")).ToString()),
+                    klasa = read.GetValue(read.GetOrdinal("klasa")).ToString(),
+                    grupyJez = read.GetValue(read.GetOrdinal("grupyJez")).ToString(),
+                    strZdjecie = read.GetValue(read.GetOrdinal("zdjecie")).ToString()
+                });
+            }
+            //studentsTable.Items.Clear();
+            studentsTable.ItemsSource = students;
+
+            sqlite_conn.Close();
         }
         private void hidePrompts()
         {
@@ -193,7 +311,6 @@ namespace sekretariat
                 grupyJez.Visibility = Visibility.Visible;
             }
         }
-
         private String generateInsertQuery()
         {
             string query = $"INSERT INTO {typeSelector.SelectedValue} ";
@@ -246,7 +363,57 @@ namespace sekretariat
             query += $"({rows}) VALUES ({values});";
             return query;
         }
+        public void implementChanges(String tablename)
+        {
+            SQLiteConnection sqlite_conn;
+            SQLiteCommand sqlite_cmd;
 
+            sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
+            sqlite_conn.Open();
+            sqlite_cmd = sqlite_conn.CreateCommand();
+
+            List<string> values = new List<string>();
+            sqlite_cmd.CommandText = $"DELETE FROM {tablename};";
+            sqlite_cmd.ExecuteNonQuery();
+            sqlite_cmd.Reset();
+
+            string rows = "imie, druImie, nazwisko, panNazwisko, imRodzicow, zdjecie, plec, pesel, dataUr, ";
+
+            if (tablename == "Uczen")
+            {
+                rows += $"klasa, grupyJez";
+                foreach (StudentRow row in studentsTable.Items)
+                    values.Add($"\"{row.imie}\",\"{row.druImie}\",\"{row.nazwisko}\",\"{row.panNazwisko}\",\"{row.imRodzicow}\",\"{row.strZdjecie}\",\"{row.plec}\",\"{row.pesel}\",\"{row.dataUr}\",\"{row.klasa}\",\"{row.grupyJez}\"");
+            }
+                
+            else if (tablename == "Nauczyciel")
+            {
+                rows += "dataZat, wychowawstwo, klasyZGodz";
+                foreach (TeacherRow row in teachersTable.Items)
+                    values.Add($"\"{row.imie}\",\"{row.druImie}\",\"{row.nazwisko}\",\"{row.panNazwisko}\",\"{row.imRodzicow}\",\"{row.strZdjecie}\",\"{row.plec}\",\"{row.pesel}\",\"{row.dataUr}\",\"{row.dataZat}\",\"{row.wychowawstwo}\",\"{row.klasyZGodz}\"");
+            }
+                
+            else if (tablename == "Pracownik")
+            {
+                rows += "dataZat, opisStan, etat";
+                foreach (WorkerRow row in workersTable.Items)
+                    values.Add($"\"{row.imie}\",\"{row.druImie}\",\"{row.nazwisko}\",\"{row.panNazwisko}\",\"{row.imRodzicow}\",\"{row.strZdjecie}\",\"{row.plec}\",\"{row.pesel}\",\"{row.dataUr}\",\"{row.dataZat}\",\"{row.opisStan}\",\"{row.etat}\"");
+            }
+
+            foreach(string value in values)
+            {
+                sqlite_cmd.CommandText = $"INSERT INTO {tablename} ({rows}) VALUES ({value});";
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.Reset();
+            }
+
+
+            sqlite_cmd.Dispose();
+            sqlite_conn.Close();
+            sqlite_conn.Dispose();
+
+            reloadTables();
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -260,7 +427,6 @@ namespace sekretariat
                 sqlite_conn = new SQLiteConnection("Data Source=school.db;Version=3;New=True;Compress=True;");
                 sqlite_conn.Open();
                 sqlite_cmd = sqlite_conn.CreateCommand();
-                // TODO: Make this create tables: (Uczniowie, Nauczyciele, Pracownicy)
                 sqlite_cmd.CommandText = $"CREATE TABLE IF NOT EXISTS Pracownik (imie TEXT, druImie TEXT, nazwisko TEXT, panNazwisko Text, imRodzicow TEXT, zdjecie TEXT, plec TEXT, pesel TEXT, dataUr TEXT, dataZat TEXT, opisStan TEXT, etat TEXT);";
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_cmd.Reset();
@@ -271,44 +437,9 @@ namespace sekretariat
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_cmd.Reset();
                 sqlite_conn.Close();
-                //MessageBox.Show("DB created");
             }
 
-            sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
-            sqlite_conn.Open();
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            
-            // new data insertion (Automated)
-            sqlite_cmd.CommandText = "SELECT * FROM Pracownik;";
-            var read = sqlite_cmd.ExecuteReader();
-            List<WorkerRow> workers = new List<WorkerRow> { };
-            
-            while (read.Read())
-            {
-                
-                workers.Add(new WorkerRow
-                {
-                    imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
-                    druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
-                    nazwisko = read.GetValue(read.GetOrdinal("nazwisko")).ToString(),
-                    panNazwisko = read.GetValue(read.GetOrdinal("panNazwisko")).ToString(),
-                    imRodzicow = read.GetValue(read.GetOrdinal("imRodzicow")).ToString(),
-                    zdjecie = Base64ToWPFImageSource(read.GetValue(read.GetOrdinal("zdjecie")).ToString()),
-                    plec = read.GetValue(read.GetOrdinal("plec")).ToString(),
-                    pesel = read.GetValue(read.GetOrdinal("pesel")).ToString(),
-                    dataUr = DateTime.Parse(read.GetValue(read.GetOrdinal("dataUr")).ToString()),
-                    dataZat = DateTime.Parse(read.GetValue(read.GetOrdinal("dataZat")).ToString()),
-                    opisStan = read.GetValue(read.GetOrdinal("opisStan")).ToString(),
-                    etat = read.GetValue(read.GetOrdinal("etat")).ToString()
-                });
-                
-
-            }
-            sqlite_conn.Close();
-            workersTable.Items.Clear();
-            workersTable.ItemsSource = workers;
-            //workersTable.Items.Add(testc);
-            //workersTable.Items.Add(new WorkerRow {imie="Nikodem",druImie="Rafał",nazwisko="Reszka",panNazwisko="",imRodzicow="",zdjecie=new Image(),plec="",pesel="",dataUr=new DateTime(),dataZat=new DateTime(),opisStan="",etat=""});
+            reloadTables();
         }
 
         private void typeChange(object sender, SelectionChangedEventArgs e)
@@ -321,9 +452,9 @@ namespace sekretariat
 
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            // TODO: Add validate function 
-            MessageBox.Show(generateInsertQuery(), "");
-
+            // TODO: Add validate function
+            // TODO: Add Editable shortcuts
+            // TODO project in paint
 
             SQLiteConnection sqlite_conn;
             SQLiteCommand sqlite_cmd;
@@ -340,6 +471,7 @@ namespace sekretariat
 
             typeSelector.SelectedIndex = -1;
             hidePrompts();
+            reloadTables();
 
         }
         private void CommonCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -354,7 +486,7 @@ namespace sekretariat
 
         private void loadImgPath(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = "";
 
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
@@ -380,6 +512,36 @@ namespace sekretariat
                 // Open document 
                 zdjecie.Text = dlg.FileName;
             }
+        }
+
+        private void changeStudents(object sender, RoutedEventArgs e)
+        {
+            implementChanges("Uczen");
+        }
+
+        private void revertStudents(object sender, RoutedEventArgs e)
+        {
+            reloadTables();
+        }
+
+        private void changeTeachers(object sender, RoutedEventArgs e)
+        {
+            implementChanges("Nauczyciel");
+        }
+
+        private void revertTeachers(object sender, RoutedEventArgs e)
+        {
+            reloadTables();
+        }
+
+        private void changeWorkers(object sender, RoutedEventArgs e)
+        {
+            implementChanges("Pracownik");
+        }
+
+        private void revertWorkers(object sender, RoutedEventArgs e)
+        {
+            reloadTables();
         }
     }
 }

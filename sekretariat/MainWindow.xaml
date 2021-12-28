@@ -92,7 +92,8 @@
             <TabItem Header="Pracownicy">
                 <Grid RenderTransformOrigin="0.475,0.449" Height="545" Width="784">
                     <materialDesign:Card Name="workerCardContainer" Margin="10" Width="764" Focusable="True" MouseDown="loseFocus">
-                        <DataGrid x:Name="workersTable" HorizontalAlignment="Left" Height="505" Margin="10,10,0,0" VerticalAlignment="Top" Width="744" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <Grid>
+                            <DataGrid x:Name="workersTable" HorizontalAlignment="Left" Height="455" Margin="10,10,0,0" VerticalAlignment="Top" Width="744" AutoGenerateColumns="False" CanUserAddRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding imie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imię"/>
                                 <DataGridTextColumn Binding="{Binding druImie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Drugię imię"/>
@@ -114,14 +115,77 @@
                                 <DataGridTextColumn Binding="{Binding etat}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Etat"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                    </materialDesign:Card>
+                        <Button x:Name="changeWorkersBtn" Content="Submit Changes" HorizontalAlignment="Left" Margin="449,470,0,0" VerticalAlignment="Top" Width="202" Height="45" Click="changeWorkers"/>
+                        <Button x:Name="revertWorkersBtn" Content="Revert Changes" HorizontalAlignment="Left" Margin="115,470,0,0" VerticalAlignment="Top" Width="202" Height="45" Background="#FFD64331" Click="revertWorkers"/>
+                        </Grid>
+                </materialDesign:Card>
                 </Grid>
             </TabItem>
             <TabItem Header="Nauczyciele">
-                <Label Content="2 Content goes here"/>
+                <Grid RenderTransformOrigin="0.475,0.449" Height="545" Width="784">
+                    <materialDesign:Card Name="teacherCardContainer" Margin="10" Width="764" Focusable="True" MouseDown="loseFocus">
+                        <Grid>
+                        <DataGrid x:Name="teachersTable" HorizontalAlignment="Left" Height="455" Margin="10,10,0,0" VerticalAlignment="Top" Width="744" AutoGenerateColumns="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding imie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imię"/>
+                                <DataGridTextColumn Binding="{Binding druImie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Drugię imię"/>
+                                <DataGridTextColumn Binding="{Binding nazwisko}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Nazwisko"/>
+                                <DataGridTextColumn Binding="{Binding panNazwisko}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Nazwisko Panieńskie"/>
+                                <DataGridTextColumn Binding="{Binding imRodzicow}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imiona Rodziców"/>
+                                <DataGridTemplateColumn Header="Zdjęcie" CanUserSort="False" CanUserReorder="False" MaxWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding zdjecie}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding plec}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Płeć"/>
+                                <DataGridTextColumn Binding="{Binding pesel}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Pesel"/>
+                                <DataGridTextColumn Binding="{Binding dataUr}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Data Urodzenia"/>
+                                <DataGridTextColumn Binding="{Binding dataZat}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Data Zatrudnienia"/>
+                                <DataGridTextColumn Binding="{Binding wychowawstwo}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Wychowawstwo"/>
+                                <DataGridTextColumn Binding="{Binding przedmiotyNau}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Przedmioty Nauczania"/>
+                                <DataGridTextColumn Binding="{Binding klasyZGodz}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Klasy z Godzinami"/>
+
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button x:Name="changeTeachersBtn" Content="Submit Changes" HorizontalAlignment="Left" Margin="449,470,0,0" VerticalAlignment="Top" Width="202" Height="45" Click="changeTeachers"/>
+                        <Button x:Name="revertTeachersBtn" Content="Revert Changes" HorizontalAlignment="Left" Margin="115,470,0,0" VerticalAlignment="Top" Width="202" Height="45" Background="#FFD64331" Click="revertTeachers"/>
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
             </TabItem>
             <TabItem Header="Uczniowie">
-                <Label Margin="100,50,10,10" Content="3 Content goes here"/>
+                <Grid RenderTransformOrigin="0.475,0.449" Height="545" Width="784">
+                    <materialDesign:Card Name="studentCardContainer" Margin="10" Width="764" Focusable="True" MouseDown="loseFocus">
+                        <Grid>
+                            <DataGrid x:Name="studentsTable" HorizontalAlignment="Left" Height="455" Margin="10,10,0,0" VerticalAlignment="Top" Width="744" AutoGenerateColumns="False" CanUserAddRows="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding imie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imię"/>
+                                    <DataGridTextColumn Binding="{Binding druImie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Drugię imię"/>
+                                    <DataGridTextColumn Binding="{Binding nazwisko}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Nazwisko"/>
+                                    <DataGridTextColumn Binding="{Binding panNazwisko}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Nazwisko Panieńskie"/>
+                                    <DataGridTextColumn Binding="{Binding imRodzicow}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imiona Rodziców"/>
+                                    <DataGridTemplateColumn Header="Zdjęcie" CanUserSort="False" CanUserReorder="False" MaxWidth="200">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding zdjecie}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Binding="{Binding plec}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Płeć"/>
+                                    <DataGridTextColumn Binding="{Binding pesel}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Pesel"/>
+                                    <DataGridTextColumn Binding="{Binding dataUr}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Data Urodzenia"/>
+                                    <DataGridTextColumn Binding="{Binding klasa}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Klasa"/>
+                                    <DataGridTextColumn Binding="{Binding grupyJez}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Grupy Językowe"/>
+                                    <DataGridTextColumn Visibility="Hidden" Binding="{Binding strZdjecie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="strZdjecie"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button x:Name="changeStudentsBtn" Content="Submit Changes" HorizontalAlignment="Left" Margin="449,470,0,0" VerticalAlignment="Top" Width="202" Height="45" Click="changeStudents"/>
+                            <Button x:Name="revertChangesBtn" Content="Revert Changes" HorizontalAlignment="Left" Margin="115,470,0,0" VerticalAlignment="Top" Width="202" Height="45" Background="#FFD64331" Click="revertStudents"/>
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
             </TabItem>
             <TabItem Header="Selektor">
                 <Label Margin="100,50,10,10" Content="3 Content goes here"/>
