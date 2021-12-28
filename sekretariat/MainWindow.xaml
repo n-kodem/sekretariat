@@ -49,7 +49,6 @@
                             <TextBox Name="panNazwisko" Height="40" Text="" materialDesign:HintAssist.Hint="Nazwisko Panieńskie" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,127,20,357.8"/>
                             <TextBox Name="imRodzicow" Height="40" Text="" materialDesign:HintAssist.Hint="Imiona Rodziców" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="37,172,397,312.8"/>
                             <TextBox Name="pesel" Height="40" Text="" materialDesign:HintAssist.Hint="Pesel" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,217,20,267.8"/>
-                            <TextBox Name="zdjecie" Height="40" Text="" materialDesign:HintAssist.Hint="Zdjęcie" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="38,217,397,267.8"/>
 
                             <TextBox Name="klasa" Height="40" Text="" materialDesign:HintAssist.Hint="Klasa" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="413,262,20,222.8"/>
                             <TextBox Name="grupyJez" Height="40" Text="" materialDesign:HintAssist.Hint="Grupy Językowe" materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HintOpacity="0.5" Margin="37,308,398,176.8"/>
@@ -73,27 +72,58 @@
                                 <System:String>Kobieta</System:String>
                             </ComboBox>
 
-                            
-                                <ComboBox x:Name="typeSelector" SelectionChanged="typeChange" Height="35"
+
+                            <ComboBox x:Name="typeSelector" SelectionChanged="typeChange" Height="35"
                                       Margin="219,10,225,479.8" materialDesign:HintAssist.Hint="Typ osoby"
                                       materialDesign:HintAssist.Foreground="Gray" materialDesign:HintAssist.IsFloating="True"
                                       materialDesign:HintAssist.HintOpacity="0.5" Grid.ColumnSpan="2">
                                 <System:String>Pracownik</System:String>
                                 <System:String>Nauczyciel</System:String>
-                                <System:String>Uczeń</System:String>
+                                <System:String>Uczen</System:String>
                             </ComboBox>
                             <Button x:Name="submitBtn" Content="Dodaj" Click="onSubmit" Height="Auto" Margin="38,430,30,9.8"/>
+                            <Button x:Name="photoBtn" Content="Wczytaj Zdjęcie" HorizontalAlignment="Left" Margin="233,217,0,0" VerticalAlignment="Top" Width="134" Height="40" Click="loadImgPath"/>
+                            <TextBox x:Name="zdjecie" IsReadOnly="True" Text="" HorizontalAlignment="Left" Margin="39,217,0,0" VerticalAlignment="Top" Height="40" Width="189" TextWrapping="Wrap" materialDesign:HintAssist.Hint="Ścieżka Pliku (Podgląd)" materialDesign:HintAssist.IsFloating="True" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" BorderThickness="0"/>
+
                         </Grid>
                     </materialDesign:Card>
                 </Grid>
             </TabItem>
             <TabItem Header="Pracownicy">
-                <Label Content="1 Content goes here"/>
+                <Grid RenderTransformOrigin="0.475,0.449" Height="545" Width="784">
+                    <materialDesign:Card Name="workerCardContainer" Margin="10" Width="764" Focusable="True" MouseDown="loseFocus">
+                        <DataGrid x:Name="workersTable" HorizontalAlignment="Left" Height="505" Margin="10,10,0,0" VerticalAlignment="Top" Width="744" AutoGenerateColumns="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding imie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imię"/>
+                                <DataGridTextColumn Binding="{Binding druImie}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Drugię imię"/>
+                                <DataGridTextColumn Binding="{Binding nazwisko}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Nazwisko"/>
+                                <DataGridTextColumn Binding="{Binding panNazwisko}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Nazwisko Panieńskie"/>
+                                <DataGridTextColumn Binding="{Binding imRodzicow}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Imiona Rodziców"/>
+                                <DataGridTemplateColumn Header="Zdjęcie" CanUserSort="False" CanUserReorder="False" MaxWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding zdjecie}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding plec}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Płeć"/>
+                                <DataGridTextColumn Binding="{Binding pesel}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Pesel"/>
+                                <DataGridTextColumn Binding="{Binding dataUr}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Data Urodzenia"/>
+                                <DataGridTextColumn Binding="{Binding dataZat}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Data Zatrudnienia"/>
+                                <DataGridTextColumn Binding="{Binding opisStan}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Opis Stanowiska"/>
+                                <DataGridTextColumn Binding="{Binding etat}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Etat"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </materialDesign:Card>
+                </Grid>
             </TabItem>
             <TabItem Header="Nauczyciele">
                 <Label Content="2 Content goes here"/>
             </TabItem>
             <TabItem Header="Uczniowie">
+                <Label Margin="100,50,10,10" Content="3 Content goes here"/>
+            </TabItem>
+            <TabItem Header="Selektor">
                 <Label Margin="100,50,10,10" Content="3 Content goes here"/>
             </TabItem>
 
