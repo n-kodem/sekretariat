@@ -13,14 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MaterialDesignThemes.Wpf;
-using static sekretariat.selectorDialog;
 using System.IO;
 using System.Data.SQLite;
 using System.Globalization;
 using Microsoft.Win32;
 using System.Drawing.Imaging;
 using System.Data;
-
 namespace sekretariat
 {
     /// <summary>
@@ -29,12 +27,11 @@ namespace sekretariat
     ///
     /// 
     /// 
-    /// v0.0.5
-
-
+    /// v1.0.0
     public partial class MainWindow : Window
     {
-        public class DefRow
+
+        public class testRow
         {
             public string imie { set; get; }
             public string druImie { set; get; }
@@ -45,33 +42,24 @@ namespace sekretariat
             public string strZdjecie { set; get; }
             public string plec { set; get; }
             public string pesel { set; get; }
-            public DateTime dataUr { set; get; }
-
-        }
-        public class WorkerRow : DefRow
-        {
-            public DateTime dataZat { set; get; }
+            public Nullable<DateTime> dataUr { set; get; }
+            public Nullable<DateTime> dataZat { set; get; }
             public string opisStan { set; get; }
             public string etat { set; get; }
-        }
-        public class TeacherRow : DefRow {
-            public DateTime dataZat { set; get; }
             public string wychowawstwo { set; get; }
             public string przedmiotyNau { set; get; }
             public string klasyZGodz { set; get; }
-        }
-        public class StudentRow : DefRow
-        {
             public string klasa { set; get; }
             public string grupyJez { set; get; }
+
         }
-        public DateTime parseDate(string arg)
+        public Nullable<DateTime> parseDate(string arg)
         {
             if (arg != "")
             {
-                return DateTime.Parse(arg);
+                return (Nullable<DateTime>)DateTime.Parse(arg);
             }
-            return DateTime.MinValue;
+            return null;
         }
         public string PathImageToBase64(string path)
         {
@@ -122,15 +110,15 @@ namespace sekretariat
             // new data insertion (Automated)
             sqlite_cmd.CommandText = "SELECT * FROM Pracownik;";
             var read = sqlite_cmd.ExecuteReader();
-            List<WorkerRow> workers = new List<WorkerRow> { }; 
-            List<TeacherRow> teachers = new List<TeacherRow> { };
-            List<StudentRow> students = new List<StudentRow> { };
-            
+            List<testRow> workers = new List<testRow> { };
+            List<testRow> teachers = new List<testRow> { };
+            List<testRow> students = new List<testRow> { };
+
 
 
             while (read.Read())
             {
-                workers.Add(new WorkerRow
+                workers.Add(new testRow
                 {
                     imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
                     druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
@@ -149,7 +137,7 @@ namespace sekretariat
             }
 
             //workersTable.Items.Clear();
-            
+
             workersTable.ItemsSource = workers;
 
             sqlite_cmd.Reset();
@@ -157,7 +145,7 @@ namespace sekretariat
             read = sqlite_cmd.ExecuteReader();
             while (read.Read())
             {
-                teachers.Add(new TeacherRow
+                teachers.Add(new testRow
                 {
                     imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
                     druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
@@ -183,7 +171,7 @@ namespace sekretariat
             read = sqlite_cmd.ExecuteReader();
             while (read.Read())
             {
-                students.Add(new StudentRow
+                students.Add(new testRow
                 {
                     imie = read.GetValue(read.GetOrdinal("imie")).ToString(),
                     druImie = read.GetValue(read.GetOrdinal("druImie")).ToString(),
@@ -295,7 +283,7 @@ namespace sekretariat
 
                 przedmiotyNau.Focusable = true;
                 przedmiotyNau.Visibility = Visibility.Visible;
-                
+
                 klasyZGodz.Focusable = true;
                 klasyZGodz.Visibility = Visibility.Visible;
 
@@ -326,35 +314,35 @@ namespace sekretariat
                     if (e.Text != "")
                     {
                         rows += $"{e.Name},";
-                        if(e.Name=="zdjecie")
+                        if (e.Name == "zdjecie")
                             values += $"\"{PathImageToBase64(e.Text)}\",";
                         else
                             values += $"\"{e.Text}\",";
                     }
-                        
+
                 }
                 else if (element.GetType() == typeof(DatePicker))
                 {
                     DatePicker e = (DatePicker)element;
 
-                    if(e.SelectedDate.HasValue)
-                    if (e.SelectedDate.Value.ToString() != "")
-                    {
-                        rows += $"{e.Name},";
-                        values+=$"\"{e.SelectedDate.Value}\",";
-                    }
-                       
+                    if (e.SelectedDate.HasValue)
+                        if (e.SelectedDate.Value.ToString() != "")
+                        {
+                            rows += $"{e.Name},";
+                            values += $"\"{e.SelectedDate.Value}\",";
+                        }
+
 
                 }
                 else if (element.GetType() == typeof(ComboBox))
                 {
                     ComboBox e = (ComboBox)element;
-                    if (e.SelectedValue!=null)
-                    if (e.Name.ToString() != "typeSelector" && e.SelectedValue.ToString()!="")
-                    {
-                        rows += $"{e.Name},";
-                        values += $"\"{e.SelectedValue}\",";
-                    }
+                    if (e.SelectedValue != null)
+                        if (e.Name.ToString() != "typeSelector" && e.SelectedValue.ToString() != "")
+                        {
+                            rows += $"{e.Name},";
+                            values += $"\"{e.SelectedValue}\",";
+                        }
                 }
             }
             rows = rows.Remove(rows.Length - 1);
@@ -382,25 +370,25 @@ namespace sekretariat
             if (tablename == "Uczen")
             {
                 rows += $"klasa, grupyJez";
-                foreach (StudentRow row in studentsTable.Items)
+                foreach (testRow row in studentsTable.Items)
                     values.Add($"\"{row.imie}\",\"{row.druImie}\",\"{row.nazwisko}\",\"{row.panNazwisko}\",\"{row.imRodzicow}\",\"{row.strZdjecie}\",\"{row.plec}\",\"{row.pesel}\",\"{row.dataUr}\",\"{row.klasa}\",\"{row.grupyJez}\"");
             }
-                
+
             else if (tablename == "Nauczyciel")
             {
                 rows += "dataZat, wychowawstwo, klasyZGodz";
-                foreach (TeacherRow row in teachersTable.Items)
+                foreach (testRow row in teachersTable.Items)
                     values.Add($"\"{row.imie}\",\"{row.druImie}\",\"{row.nazwisko}\",\"{row.panNazwisko}\",\"{row.imRodzicow}\",\"{row.strZdjecie}\",\"{row.plec}\",\"{row.pesel}\",\"{row.dataUr}\",\"{row.dataZat}\",\"{row.wychowawstwo}\",\"{row.klasyZGodz}\"");
             }
-                
+
             else if (tablename == "Pracownik")
             {
                 rows += "dataZat, opisStan, etat";
-                foreach (WorkerRow row in workersTable.Items)
+                foreach (testRow row in workersTable.Items)
                     values.Add($"\"{row.imie}\",\"{row.druImie}\",\"{row.nazwisko}\",\"{row.panNazwisko}\",\"{row.imRodzicow}\",\"{row.strZdjecie}\",\"{row.plec}\",\"{row.pesel}\",\"{row.dataUr}\",\"{row.dataZat}\",\"{row.opisStan}\",\"{row.etat}\"");
             }
 
-            foreach(string value in values)
+            foreach (string value in values)
             {
                 sqlite_cmd.CommandText = $"INSERT INTO {tablename} ({rows}) VALUES ({value});";
                 sqlite_cmd.ExecuteNonQuery();
@@ -411,8 +399,54 @@ namespace sekretariat
             sqlite_cmd.Dispose();
             sqlite_conn.Close();
             sqlite_conn.Dispose();
-
             reloadTables();
+        }
+        public string generateSQL()
+        {
+            string query = $"SELECT * FROM {tableSelection.SelectedValue} ";
+            string queryToShow = query;
+            bool isData = columnSelection.SelectedValue.ToString().Contains("data");
+            if (!isData)
+                query += $"WHERE {columnSelection.SelectedValue} ";
+            else
+                query += $"WHERE CAST((substr({columnSelection.SelectedValue},7,4)||substr({columnSelection.SelectedValue},4,2)||substr({columnSelection.SelectedValue},0,3)) as INT) ";
+            queryToShow += $"WHERE {columnSelection.SelectedValue} ";
+            if (operationSelection.SelectedValue.ToString() == "Równa")
+            {
+                query += $"=";
+                if (!isData)
+                {
+                    query += $" \"{datePicker.Text + valuePicker.Text}\"";
+                }
+            }
+                
+            else if (operationSelection.SelectedValue.ToString() == "W stylu")
+                query += $"LIKE \"%{valuePicker.Text}%\"";
+            else if (operationSelection.SelectedValue.ToString() == "Większa")
+                query += $">";
+            else if (operationSelection.SelectedValue.ToString() == "Większa lub Równa")
+                query += $">=";
+            else if (operationSelection.SelectedValue.ToString() == "Mniejsza")
+                query += $"<";
+            else if (operationSelection.SelectedValue.ToString() == "Mniejsza lub Równa")
+                query += $"<=";
+            if (isData)
+            {
+                queryToShow += query.Split(' ').Last();
+                query += $" CAST((substr(\"{datePicker.Text}\",7,4)||substr(\"{datePicker.Text}\",0,3)||substr(\"{datePicker.Text}\",4,2)) as INT)";
+                queryToShow += $" {columnSelection.SelectedValue};";
+            }
+            if (orderBy.SelectedIndex != -1)
+                query += $" ORDER BY {orderBy.SelectedValue}";
+            if (orderType.SelectedIndex == 1)
+                query += " DESC";
+
+            query += ";";
+            
+            //SqlTextContainer.Text = (!isData)?query:queryToShow;
+            SqlTextContainer.Text = query;
+
+            return query;
         }
         public MainWindow()
         {
@@ -444,7 +478,7 @@ namespace sekretariat
 
         private void typeChange(object sender, SelectionChangedEventArgs e)
         {
-            if (typeSelector.SelectedIndex != -1) { 
+            if (typeSelector.SelectedIndex != -1) {
                 hidePrompts();
                 ShowBoxes(typeSelector.SelectedValue.ToString());
             }
@@ -452,9 +486,8 @@ namespace sekretariat
 
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            // TODO: Add validate function
-            // TODO: Add Editable shortcuts
             // TODO project in paint
+            // TODO: FIX SQL DATA
 
             SQLiteConnection sqlite_conn;
             SQLiteCommand sqlite_cmd;
@@ -468,16 +501,15 @@ namespace sekretariat
 
             sqlite_cmd.ExecuteNonQuery();
             sqlite_conn.Close();
+            sqlite_cmd.Dispose();
+            sqlite_conn.Dispose();
 
             typeSelector.SelectedIndex = -1;
             hidePrompts();
             reloadTables();
 
         }
-        private void CommonCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+
 
         private void loseFocus(object sender, MouseButtonEventArgs e)
         {
@@ -513,7 +545,14 @@ namespace sekretariat
                 zdjecie.Text = dlg.FileName;
             }
         }
-
+        private void ShowFirstMessage(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Skrót klawiszowy 1");
+        }
+        private void ShowSecondMessage(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Skrót klawiszowy 2");
+        }
         private void changeStudents(object sender, RoutedEventArgs e)
         {
             implementChanges("Uczen");
@@ -542,6 +581,317 @@ namespace sekretariat
         private void revertWorkers(object sender, RoutedEventArgs e)
         {
             reloadTables();
+        }
+
+        private void short1Achange(object sender, SelectionChangedEventArgs e)
+        {
+            command1.Modifiers = (ModifierKeys)new ModifierKeysConverter().ConvertFromString(short1A.SelectedValue.ToString());
+        }
+        private void short2Achange(object sender, SelectionChangedEventArgs e)
+        {
+
+            command1.Key = (Key)new KeyConverter().ConvertFromString(short2A.SelectedValue.ToString());
+        }
+        private void short1Bchange(object sender, SelectionChangedEventArgs e)
+        {
+            command2.Modifiers = (ModifierKeys)new ModifierKeysConverter().ConvertFromString(short1B.SelectedValue.ToString());
+        }
+
+        private void short2Bchange(object sender, SelectionChangedEventArgs e)
+        {
+            command2.Key = (Key)new KeyConverter().ConvertFromString(short2B.SelectedValue.ToString());
+        }
+        private void ShowSecondMessage(object sender, CanExecuteRoutedEventArgs e)
+        {
+            MessageBox.Show("Skrót Klawiszowy 2");
+        }
+
+        private void ShowFirstMessage(object sender, CanExecuteRoutedEventArgs e)
+        {
+            MessageBox.Show("Skrót Klawiszowy 1");
+        }
+        private void importFile(object sender, RoutedEventArgs e)
+        {
+            if (fileImportComboBox.SelectedIndex == -1 || delimiter.SelectedIndex==-1 || addType.SelectedIndex==-1)
+            {
+                InfoSnackBar.MessageQueue?.Enqueue(
+                    "Aby importować plik należy wcześniej wybrać tabelę, typ importu oraz ustawić delimiter.",
+                    null, null, null, false, true, TimeSpan.FromSeconds(3));
+            }
+            else
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+
+                dlg.DefaultExt = ".txt";
+                dlg.Filter = "Text documents (.txt)|*.txt";
+
+                // Show open file dialog box 
+                Nullable<bool> result = dlg.ShowDialog();
+
+                // Process open file dialog box results 
+                if (result == true)
+                {
+                    string filename = $"{dlg.FileName}";
+
+                    SQLiteConnection sqlite_conn;
+                    SQLiteCommand sqlite_cmd;
+
+                    sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
+                    sqlite_conn.Open();
+                    sqlite_cmd = sqlite_conn.CreateCommand();
+
+                    var lines = File.ReadLines(filename);
+
+                    if (addType.SelectedValue.ToString() == "Nadpisz")
+                    {
+                        sqlite_cmd.CommandText = $"DELETE FROM TABLE {fileImportComboBox.SelectedValue}";
+                        sqlite_cmd.ExecuteNonQuery();
+                        sqlite_cmd.Reset();
+                    }
+                    try { 
+                        foreach (var line in lines)
+                        {
+
+                            List<string> linevars = line.Split(delimiter.SelectedValue.ToString().First()).ToList();
+                            if (fileImportComboBox.SelectedValue.ToString() == "Uczen") {
+                                sqlite_cmd.CommandText = $"INSERT INTO Uczen (imie,druImie,nazwisko,panNazwisko,imRodzicow,plec,pesel,dataUr,klasa,grupyJez) VALUES ({string.Join(",", linevars.Select(argument => "\"" + argument + "\"")) })";
+                            }
+                            else if (fileImportComboBox.SelectedValue.ToString() == "Pracownik")
+                                sqlite_cmd.CommandText = $"INSERT INTO Pracownik (imie,druImie,nazwisko,panNazwisko,imRodzicow,plec,pesel,dataUr,dataZat,opisStan,etat) VALUES ({string.Join(",", linevars.Select(argument => "\"" + argument + "\"")) })";
+                            else if (fileImportComboBox.SelectedValue.ToString() == "Nauczyciel")
+                                sqlite_cmd.CommandText = $"INSERT INTO Nauczyciel (imie,druImie,nazwisko,panNazwisko,imRodzicow,plec,pesel,dataUr,dataZat,przedmiotyNau,wychowawstwo,klasyZGodz) VALUES ({string.Join(",", linevars.Select(argument => "\"" + argument + "\"")) })";
+
+                            sqlite_cmd.ExecuteNonQuery();
+                            sqlite_cmd.Reset();
+                        }
+                    }
+                    catch
+                    {
+                        ErrorSnackBar.MessageQueue?.Enqueue(
+                        "Dane zawarte w pliku są nieprawidłowe.",
+                        null, null, null, false, true, TimeSpan.FromSeconds(3));
+                    }
+                    sqlite_conn.Close();
+                    sqlite_conn.Dispose();
+                    sqlite_cmd.Dispose();
+                    reloadTables();
+                }
+            }
+        }
+
+        private void OnTableSelect(object sender, SelectionChangedEventArgs e)
+        {
+            if (tableSelection.SelectedIndex!=-1)
+            {
+                List<string> pracownikVals = new List<string>() { "imie", "druImie", "nazwisko", "panNazwisko", "imRodzicow", "plec", "pesel", "dataUr", "dataZat", "opisStan", "etat" };
+                List<string> nauczycielVals = new List<string>() { "imie", "druImie", "nazwisko", "panNazwisko", "imRodzicow", "plec", "pesel", "dataUr", "dataZat", "przedmiotyNau", "wychowawstwo", "klasyZGodz" };
+                List<string> uczenVals = new List<string>() { "imie", "druImie", "nazwisko", "panNazwisko", "imRodzicow", "plec", "pesel", "dataUr", "klasa", "grupyJez" };
+                selectorGrid.Columns.Clear();
+                ICollection<DataGridColumn> columns = studentsTable.Columns;
+                if (tableSelection.SelectedValue.ToString() == "Pracownik")
+                {
+                    columnSelection.ItemsSource = pracownikVals;
+                    columns = workersTable.Columns;
+                }
+                else if (tableSelection.SelectedValue.ToString() == "Nauczyciel")
+                {
+                    columnSelection.ItemsSource = nauczycielVals;
+                    columns = teachersTable.Columns;
+                }
+                
+                else if (tableSelection.SelectedValue.ToString() == "Uczen")
+                {
+                    columnSelection.ItemsSource = uczenVals;
+
+                }
+
+                
+                foreach (DataGridColumn dgColumns in columns)
+                {
+                    if (dgColumns.GetType().ToString().Contains("DataGridTextColumn"))
+                    selectorGrid.Columns.Add(new MaterialDesignThemes.Wpf.DataGridTextColumn
+                    {
+                        Header = dgColumns.Header,
+                        Binding = new Binding(string.Format("{0}", dgColumns.SortMemberPath)),
+                        Visibility = dgColumns.Visibility,
+                        HeaderTemplate = dgColumns.HeaderTemplate,
+                        HeaderTemplateSelector = dgColumns.HeaderTemplateSelector,
+                        HeaderStringFormat = dgColumns.HeaderStringFormat,
+                        CellStyle = dgColumns.CellStyle
+                    }
+                    );
+
+                    
+                }
+                
+                columnSelection.IsEnabled = true;
+                columnSelection.SelectedIndex = -1;
+            }
+            else
+            {
+                columnSelection.IsEnabled = false;
+                columnSelection.SelectedIndex = -1;
+            }
+        }
+
+        private void OnColumnSelect(object sender, SelectionChangedEventArgs e)
+        {
+            if (columnSelection.SelectedIndex != -1)
+            {
+                if (columnSelection.SelectedValue.ToString().Contains("data"))
+                    operationSelection.ItemsSource = new List<string> { "Mniejsza", "Większa", "Równa", "Większa lub Równa", "Mniejsza lub Równa" };
+                else
+                    operationSelection.ItemsSource = new List<string> { "Równa", "W stylu" };
+
+                operationSelection.IsEnabled = true;
+                operationSelection.SelectedIndex = -1;
+            }
+            else
+            {
+                operationSelection.IsEnabled = false;
+                operationSelection.SelectedIndex = -1;
+            }
+        }
+
+        private void OnOperationSelect(object sender, SelectionChangedEventArgs e)
+        {
+            if (operationSelection.SelectedIndex != -1)
+            {
+                if (columnSelection.SelectedValue.ToString().Contains("data"))
+                {
+                    datePicker.IsEnabled = true;
+                }
+                else
+                {
+                    valuePicker.IsEnabled = true;
+                }
+                generateRaportBtn.IsEnabled = true;
+                orderBy.IsEnabled = true;
+                List<string> pracownikVals = new List<string>() { "imie", "druImie", "nazwisko", "panNazwisko", "imRodzicow", "plec", "pesel", "dataUr", "dataZat", "opisStan", "etat" };
+                List<string> nauczycielVals = new List<string>() { "imie", "druImie", "nazwisko", "panNazwisko", "imRodzicow", "plec", "pesel", "dataUr", "dataZat", "przedmiotyNau", "wychowawstwo", "klasyZGodz" };
+                List<string> uczenVals = new List<string>() { "imie", "druImie", "nazwisko", "panNazwisko", "imRodzicow", "plec", "pesel", "dataUr", "klasa", "grupyJez" };
+
+                if (tableSelection.SelectedValue.ToString() == "Pracownik")
+                    orderBy.ItemsSource = pracownikVals;
+                else if (tableSelection.SelectedValue.ToString() == "Nauczyciel")
+                    orderBy.ItemsSource = nauczycielVals;
+
+                else if (tableSelection.SelectedValue.ToString() == "Uczen")
+                    orderBy.ItemsSource = uczenVals;
+            }
+            else
+            {
+                valuePicker.IsEnabled = false;
+                datePicker.IsEnabled = false;
+                dataExportBtn.IsEnabled = false;
+                generateRaportBtn.IsEnabled = false;
+                orderBy.IsEnabled = false;
+                orderType.IsEnabled = false;
+                datePicker.Text = "";
+                valuePicker.Text = "";
+                orderBy.SelectedIndex = -1;
+                orderType.SelectedIndex = -1;
+            }
+        }
+
+        private void generateRaport(object sender, RoutedEventArgs e)
+        {
+            var sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
+            sqlite_conn.Open();
+            var sqlite_cmd = sqlite_conn.CreateCommand();
+
+            sqlite_cmd.CommandText = generateSQL();
+            var read = sqlite_cmd.ExecuteReader();
+            
+            List<testRow> workers = new List<testRow> { };
+
+            tableSelection.SelectedValue.ToString();
+
+            while (read.Read())
+            {
+                var newData = new testRow();
+                newData.imie = read.GetValue(read.GetOrdinal("imie")).ToString();
+                newData.druImie = read.GetValue(read.GetOrdinal("druImie")).ToString();
+                newData.nazwisko = read.GetValue(read.GetOrdinal("nazwisko")).ToString();
+                newData.panNazwisko = read.GetValue(read.GetOrdinal("panNazwisko")).ToString();
+                newData.imRodzicow = read.GetValue(read.GetOrdinal("imRodzicow")).ToString();
+                newData.plec = read.GetValue(read.GetOrdinal("plec")).ToString();
+                newData.pesel = read.GetValue(read.GetOrdinal("pesel")).ToString();
+                newData.dataUr = parseDate(read.GetValue(read.GetOrdinal("dataUr")).ToString());
+                try
+                {
+                    newData.dataZat = parseDate(read.GetValue(read.GetOrdinal("dataZat")).ToString());
+                    try
+                    {
+                        newData.opisStan = read.GetValue(read.GetOrdinal("opisStan")).ToString();
+                        newData.etat = read.GetValue(read.GetOrdinal("etat")).ToString();
+                    }
+                    catch
+                    {
+                        newData.przedmiotyNau = read.GetValue(read.GetOrdinal("przedmiotyNau")).ToString();
+                        newData.wychowawstwo = read.GetValue(read.GetOrdinal("wychowawstwo")).ToString();
+                        newData.klasyZGodz = read.GetValue(read.GetOrdinal("klasyZGodz")).ToString();
+                    }
+                }
+                catch
+                {
+                    newData.klasa = read.GetValue(read.GetOrdinal("klasa")).ToString();
+                    newData.grupyJez = read.GetValue(read.GetOrdinal("grupyJez")).ToString();
+                }
+
+                workers.Add(newData);
+
+            }
+            selectorGrid.ItemsSource = workers;
+            
+            sqlite_conn.Close();
+            sqlite_cmd.Dispose();
+            sqlite_conn.Dispose();
+            dataExportBtn.IsEnabled = true;
+
+        }
+
+        private void exportTable(object sender, RoutedEventArgs e)
+        {
+
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.FileName = "Document"; // Default file name
+            dlg.DefaultExt = ".text"; // Default file extension
+            dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+
+            // Show save file dialog box
+            Nullable<bool> isShowed = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (isShowed == true)
+            {
+                // Save document
+                selectorGrid.SelectAllCells();
+                selectorGrid.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+                ApplicationCommands.Copy.Execute(null, selectorGrid);
+
+                selectorGrid.UnselectAllCells();
+                string result = (string)System.Windows.Clipboard.GetData(System.Windows.DataFormats.CommaSeparatedValue);
+
+                File.AppendAllText(dlg.FileName, result, UnicodeEncoding.UTF8);
+            }
+            
+        }
+
+        private void onOrderBySelection(object sender, SelectionChangedEventArgs e)
+        {
+            if (orderBy.SelectedIndex != -1)
+            {
+                
+                orderType.IsEnabled = true;
+
+
+            }
+            else
+            {
+
+                orderType.IsEnabled = false;
+            }
         }
     }
 }
