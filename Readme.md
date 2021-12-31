@@ -1,14 +1,3 @@
-﻿<style>
-table{
-    allign:center;
-}
-table, th, td {
-  border:1px solid black;
-  text-allign: center;
-
-}
-</style>
-
 # SEKRETARIAT
 
 ## Spis treści
