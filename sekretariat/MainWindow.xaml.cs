@@ -57,7 +57,14 @@ namespace sekretariat
         {
             if (arg != "")
             {
-                return (Nullable<DateTime>)DateTime.Parse(arg);
+                try
+                {
+                    return (Nullable<DateTime>)DateTime.Parse(arg);
+                }
+                catch
+                {
+                    return null;
+                }
             }
             return null;
         }
@@ -345,9 +352,12 @@ namespace sekretariat
                         }
                 }
             }
+
+            if(rows.Length==0 || values.Length==0)
+                return "";
+
             rows = rows.Remove(rows.Length - 1);
             values = values.Remove(values.Length - 1);
-
             query += $"({rows}) VALUES ({values});";
             return query;
         }
@@ -415,9 +425,7 @@ namespace sekretariat
             {
                 query += $"=";
                 if (!isData)
-                {
                     query += $" \"{datePicker.Text + valuePicker.Text}\"";
-                }
             }
                 
             else if (operationSelection.SelectedValue.ToString() == "W stylu")
@@ -443,8 +451,7 @@ namespace sekretariat
 
             query += ";";
             
-            //SqlTextContainer.Text = (!isData)?query:queryToShow;
-            SqlTextContainer.Text = query;
+            SqlTextContainer.Text = (!isData)?query:queryToShow;
 
             return query;
         }
@@ -455,8 +462,7 @@ namespace sekretariat
             SQLiteConnection sqlite_conn;
             SQLiteCommand sqlite_cmd;
             // Create DB if not exists
-            bool newdb = File.Exists("school.db");
-            if (!newdb)
+            if (!File.Exists("school.db"))
             {
                 sqlite_conn = new SQLiteConnection("Data Source=school.db;Version=3;New=True;Compress=True;");
                 sqlite_conn.Open();
@@ -472,7 +478,6 @@ namespace sekretariat
                 sqlite_cmd.Reset();
                 sqlite_conn.Close();
             }
-
             reloadTables();
         }
 
@@ -486,27 +491,34 @@ namespace sekretariat
 
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            // TODO project in paint
-            // TODO: FIX SQL DATA
+            string insertQuery = generateInsertQuery();
+            if (insertQuery != "")
+            {
+                SQLiteConnection sqlite_conn;
+                SQLiteCommand sqlite_cmd;
 
-            SQLiteConnection sqlite_conn;
-            SQLiteCommand sqlite_cmd;
+                sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
+                sqlite_conn.Open();
+                sqlite_cmd = sqlite_conn.CreateCommand();
 
-            sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
-            sqlite_conn.Open();
-            sqlite_cmd = sqlite_conn.CreateCommand();
 
-            // new data insertion (Automated)
-            sqlite_cmd.CommandText = generateInsertQuery();
-
-            sqlite_cmd.ExecuteNonQuery();
-            sqlite_conn.Close();
-            sqlite_cmd.Dispose();
-            sqlite_conn.Dispose();
-
-            typeSelector.SelectedIndex = -1;
-            hidePrompts();
-            reloadTables();
+                sqlite_cmd.CommandText = insertQuery;
+                
+                sqlite_cmd.ExecuteNonQuery();
+            
+                sqlite_conn.Close();
+                sqlite_cmd.Dispose();
+                sqlite_conn.Dispose();
+                hidePrompts();
+                reloadTables();
+                typeSelector.SelectedIndex = -1;
+            }
+            else
+            {
+                ErrorSnackBar.MessageQueue?.Enqueue(
+                        "Nie wprowadzono żadnych wartości.",
+                        null, null, null, false, true, TimeSpan.FromSeconds(1));
+            }
 
         }
 
@@ -635,6 +647,7 @@ namespace sekretariat
 
                     SQLiteConnection sqlite_conn;
                     SQLiteCommand sqlite_cmd;
+                    
 
                     sqlite_conn = new SQLiteConnection("DataSource=school.db;Version=3;");
                     sqlite_conn.Open();
@@ -644,7 +657,7 @@ namespace sekretariat
 
                     if (addType.SelectedValue.ToString() == "Nadpisz")
                     {
-                        sqlite_cmd.CommandText = $"DELETE FROM TABLE {fileImportComboBox.SelectedValue}";
+                        sqlite_cmd.CommandText = $"DELETE FROM {fileImportComboBox.SelectedValue}";
                         sqlite_cmd.ExecuteNonQuery();
                         sqlite_cmd.Reset();
                     }
@@ -670,6 +683,13 @@ namespace sekretariat
                         ErrorSnackBar.MessageQueue?.Enqueue(
                         "Dane zawarte w pliku są nieprawidłowe.",
                         null, null, null, false, true, TimeSpan.FromSeconds(3));
+
+                        sqlite_reader.InsertCommand = new SQLiteCommand("", sqlite_conn);
+                        sqlite_cmd.CommandText = $"DELETE FROM {fileImportComboBox.SelectedValue}";
+                        sqlite_cmd.ExecuteNonQuery();
+                        sqlite_cmd.Reset();
+
+
                     }
                     sqlite_conn.Close();
                     sqlite_conn.Dispose();
@@ -700,12 +720,8 @@ namespace sekretariat
                 }
                 
                 else if (tableSelection.SelectedValue.ToString() == "Uczen")
-                {
                     columnSelection.ItemsSource = uczenVals;
 
-                }
-
-                
                 foreach (DataGridColumn dgColumns in columns)
                 {
                     if (dgColumns.GetType().ToString().Contains("DataGridTextColumn"))
@@ -720,10 +736,7 @@ namespace sekretariat
                         CellStyle = dgColumns.CellStyle
                     }
                     );
-
-                    
                 }
-                
                 columnSelection.IsEnabled = true;
                 columnSelection.SelectedIndex = -1;
             }
@@ -881,17 +894,10 @@ namespace sekretariat
         private void onOrderBySelection(object sender, SelectionChangedEventArgs e)
         {
             if (orderBy.SelectedIndex != -1)
-            {
-                
                 orderType.IsEnabled = true;
 
-
-            }
             else
-            {
-
                 orderType.IsEnabled = false;
-            }
         }
     }
 }

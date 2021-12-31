@@ -270,26 +270,7 @@
                                 <System:String>Uczen</System:String>
                             </ComboBox>
                             <Button x:Name="fileImportBtn" Content="Wybierz plik do Importu" HorizontalAlignment="Left" Margin="476,174,0,0" VerticalAlignment="Top" Width="240" Click="importFile" Height="36"/>
-                            <materialDesign:Snackbar Background="Gray" IsActive="False" x:Name="InfoSnackBar" MessageQueue="{materialDesign:MessageQueue}" ClipToBounds="False" RenderTransformOrigin="0.5,0.5">
-                                <materialDesign:Snackbar.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-10"/>
-                                    </TransformGroup>
-                                </materialDesign:Snackbar.RenderTransform>
-                            </materialDesign:Snackbar>
-                            <materialDesign:Snackbar Background="#FFD64331" IsActive="False" x:Name="ErrorSnackBar" MessageQueue="{materialDesign:MessageQueue}" ClipToBounds="False" RenderTransformOrigin="0.5,0.5">
-                                <materialDesign:Snackbar.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-10"/>
-                                    </TransformGroup>
-                                </materialDesign:Snackbar.RenderTransform>
-                            </materialDesign:Snackbar>
+                            
                             <ComboBox x:Name="addType" HorizontalAlignment="Left" Margin="476,115,0,0" VerticalAlignment="Top" Width="120" materialDesign:HintAssist.Hint="Typ Importu" materialDesign:HintAssist.IsFloating="True">
                                 <System:String>Nadpisz</System:String>
                                 <System:String>Dodaj</System:String>
@@ -309,7 +290,26 @@
                 </Grid>
             </TabItem>
         </TabControl>
-
+        <materialDesign:Snackbar Background="Gray" IsActive="False" x:Name="InfoSnackBar" MessageQueue="{materialDesign:MessageQueue}" ClipToBounds="False" RenderTransformOrigin="0.5,0.5">
+            <materialDesign:Snackbar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-15"/>
+                </TransformGroup>
+            </materialDesign:Snackbar.RenderTransform>
+        </materialDesign:Snackbar>
+        <materialDesign:Snackbar Background="#FFD64331" IsActive="False" x:Name="ErrorSnackBar" MessageQueue="{materialDesign:MessageQueue}" ClipToBounds="False" RenderTransformOrigin="0.5,0.5">
+            <materialDesign:Snackbar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-15"/>
+                </TransformGroup>
+            </materialDesign:Snackbar.RenderTransform>
+        </materialDesign:Snackbar>
 
     </Grid>
 </Window>
