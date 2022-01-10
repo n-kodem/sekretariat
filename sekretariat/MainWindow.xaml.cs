@@ -654,7 +654,7 @@ namespace sekretariat
                     sqlite_cmd = sqlite_conn.CreateCommand();
 
                     var lines = File.ReadLines(filename);
-
+                    
                     if (addType.SelectedValue.ToString() == "Nadpisz")
                     {
                         sqlite_cmd.CommandText = $"DELETE FROM {fileImportComboBox.SelectedValue}";
@@ -677,6 +677,9 @@ namespace sekretariat
                             sqlite_cmd.ExecuteNonQuery();
                             sqlite_cmd.Reset();
                         }
+                        InfoSnackBar.MessageQueue?.Enqueue(
+                        "Dane zostały zaimportowane pomyślnie.",
+                        null, null, null, false, true, TimeSpan.FromSeconds(3));
                     }
                     catch
                     {
@@ -684,12 +687,9 @@ namespace sekretariat
                         "Dane zawarte w pliku są nieprawidłowe.",
                         null, null, null, false, true, TimeSpan.FromSeconds(3));
 
-                        sqlite_reader.InsertCommand = new SQLiteCommand("", sqlite_conn);
                         sqlite_cmd.CommandText = $"DELETE FROM {fileImportComboBox.SelectedValue}";
                         sqlite_cmd.ExecuteNonQuery();
                         sqlite_cmd.Reset();
-
-
                     }
                     sqlite_conn.Close();
                     sqlite_conn.Dispose();
