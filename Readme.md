@@ -100,11 +100,99 @@ Okno Programu
 │   └─ Wklej
 └── Kafelki przenoszące do paneli
        ├── Panel Dodaj
+       │   └─ ComboBox do wybrania typu osoby (Pracownik,Nauczyciel,Uczeń)
+       │      ├─ Dowolny wybór 
+       │      │   ├─ Pola tekstowe: Imie,Drugie imie, Nazwisko, Nazwisko Panieńskie, Imiona rodziców
+       │      │   ├─ Pola specjalne
+       │      │   │  ├─ DatePicker: Data Urodzenia
+       │      │   │  └─ ComboBox: Płeć 
+       │      │   └─ Pole dla zdjęcia: Przycisk do wczytania, Panel do podglądu ścieżki pliku
+       │      ├─ Pracownik
+       │      │   ├─ Pola tekstowe: Opis Stanowiska, Etat
+       │      │   └─ Pola specjalne
+       │      │      └─ DatePicker: Data Zatrudnienia
+       │      ├─ Nauczyciel
+       │      │   ├─ Pola tekstowe: Klasy z Godzinami, Przedmioty Nauczane, Wychowawstwo
+       │      │   └─ Pola specjalne
+       │      │      └─ DatePicker: Data Zatrudnienia
+       │      └─ Uczeń
+       │          └─ Pola tekstowe: Klasa, Grupy Językowe
        ├── Panel Pracownicy
+       │   ├─ Tabela pracownizy z kolumnami
+       │   │  ├─ Imię
+       │   │  ├─ Drugie Imię
+       │   │  ├─ Nazwisko
+       │   │  ├─ Nazwisko Panieńskie
+       │   │  ├─ Imiona Rodziców
+       │   │  ├─ Płeć
+       │   │  ├─ Zdjęcie
+       │   │  ├─ Pesel
+       │   │  ├─ Data Urodzenia
+       │   │  ├─ Data Zatrudnienia
+       │   │  ├─ Opis Stanowiska
+       │   │  └─ Etat
+       │   ├─ Przycisk Zatwierdź Zmiany
+       │   └─ Przycisk Odwróć Zmiany
        ├── Panel Nauczyciele
+       │   ├─ Tabela Nauczyciele z kolumnami
+       │   │  ├─ Imię
+       │   │  ├─ Drugie Imię
+       │   │  ├─ Nazwisko
+       │   │  ├─ Nazwisko Panieńskie
+       │   │  ├─ Imiona Rodziców
+       │   │  ├─ Płeć
+       │   │  ├─ Zdjęcie
+       │   │  ├─ Pesel
+       │   │  ├─ Data Urodzenia
+       │   │  ├─ Data Zatrudnienia
+       │   │  ├─ Klasy z Godzinami
+       │   │  ├─ Przedmioty Nauczane
+       │   │  └─ Wychowawstwo
+       │   ├─ Przycisk Zatwierdź Zmiany
+       │   └─ Przycisk Odwróć Zmiany
        ├── Panel Uczniowie
+       │   ├─ Tabela Uczniowie z kolumnami
+       │   │  ├─ Imię
+       │   │  ├─ Drugie Imię
+       │   │  ├─ Nazwisko
+       │   │  ├─ Nazwisko Panieńskie
+       │   │  ├─ Imiona Rodziców
+       │   │  ├─ Płeć
+       │   │  ├─ Zdjęcie
+       │   │  ├─ Pesel
+       │   │  ├─ Data Urodzenia
+       │   │  ├─ Klasa
+       │   │  └─ Grupy Językowe
+       │   ├─ Przycisk Zatwierdź Zmiany
+       │   └─ Przycisk Odwróć Zmiany
        ├── Panel Selektor
+       │   ├─ Tabela Generowana na podstawie wyborów użytkownika
+       │   ├─ Widok zapytania w SQL
+       │   ├─ Pole wyboru tabeli
+       │   ├─ Dane do wyboru na podstawie wcześniejszych wyborów użytkownika
+       │   │  ├─ Pole wyboru kolumny
+       │   │  ├─ Pole wyboru operacji
+       │   │  ├─ Pole wyboru kolumny do sortowania
+       │   │  ├─ Pole wyboru typu sortowania
+       │   │  ├─ Pole wyboru daty
+       │   │  └─ Pole wyboru wartości do znalezienia
+       │   ├─ Przycisk do generowania raportu na podstawie wyborów użytkownika
+       │   └─ Przycisk do eksportowania danych z Tabeli
        └── Panel Ustawień
+           ├─ Panel Skrótu 1
+           │  ├─ Napis: Skrót 1
+           │  ├─ ComboBox z wyborem klawisza specjalnego skrótu
+           │  └─ ComboBox z wyborem litery do skrótu
+           ├─ Panel Skrótu 2
+           │  ├─ Napis: Skrót 2
+           │  ├─ ComboBox z wyborem klawisza specjalnego skrótu
+           │  └─ ComboBox z wyborem litery do skrótu
+           └─ Panel Importu tabel
+              ├─ Napis: Import tabel
+              ├─ ComboBox z wyborem tabeli do importowania
+              ├─ ComboBox z wyborem typu importu (Nadpisz, Dodaj)
+              ├─ Combobox z wyborem Delimitera
+              └─ Przycisk z wyborem pliku do Importu
 
 ```
 
