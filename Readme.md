@@ -48,14 +48,27 @@ Aplikacja ma umożliwiać wprowadzanie danych uczniów, nauczycieli i pracownik�
 
 ## Harmonogram testowania
 
-|                               Cel Testu                              |                                                                Błąd                                                                |                                                  Sposób reprodukcji błędu                                                 | Środowisko |                                    Oczekiwany rezultat                                   | Priorytet |   Status   |
-|:--------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------:|:----------:|:----------------------------------------------------------------------------------------:|:---------:|:----------:|
-| Sprawdzenie poprawności systemu<br>wprowadzania danych do aplikacji. |                                       Przy próbie dodania danych<br>pustych program crashuje.                                      |       1.Uruchom aplikacje<br>2. Przejdź do panelu Dodaj<br>3. Wybierz dowolny typ osoby<br>4. Kliknij przycisk Dodaj      | Windows 10 | Wyświetlenie informacji<br>o braku wprowadzonych danych.<br>/<br>Dodanie pustych danych. |   Wysoki  | Rozwiązane |
-|     Sprawdzenie poprawności zużywania<br>pamięci przez aplikacje.    | Podczas użytkowania aplikacji poziom zużycia danych <br>rośnie aż w pewnym momencie program staje się niezdatny <br>do użytkowania |                1. Uruchom aplikacje<br>2. Korzystaj z fukcji jakie <br>oferuje aplikacja przez dłuższy czas               | Windows 10 |      Przybliżony do początkowego poziom <br>zużycia pamięci po dłuższym użytkowaniu.     |   Średni  | Rozwiązane |
-|         Sprawdzenie poprawności importowania<br>tabel z pliku        |                                   Podczas dodania pliku przypadkowego <br>pliku program crashuje.                                  | 1. Uruchom aplikacje<br>2. Przejdź do panelu ustawień<br>3. Zaimportuj plik niezawierający<br>poprawnych danych do tabeli | Windows 10 |                Informacja o tym, że tabela<br>zawiera nieprawidłowe dane.                |   Wysoki  | Rozwiązane |
-|        Sprawdzenie poprawności zmiany<br> skrótów klawiszowych       |                                   Podczas próby zmiany skrótu<br> klawiszowego program crashuje.                                   |  1. Uruchom aplikacje<br>2. Przejdź do panelu ustawień<br>3. Spróbuj wybrać inny skrót w<br> comboboxie do zmiany skrótu  | Windows 10 |                                Zmiana skrótu klawiszowego                                |   Wysoki  | Rozwiązane |
-|        Sprawdzenie poprawności działania finalnego produktu.       |                                   Podczas importu danych z pliku program crashuje.                                   |  1. Uruchom aplikacje<br>2. Przejdź do panelu ustawień<br>3. Spróbuj zimportować plik tekstowy  | Windows 10 |                                Zimportowanie pliku.                                |   Wysoki  | Rozwiązane |
-
+| Błąd | Status | Data |
+|:---:|:---:|:---:|
+| Po kliknięciu przycisku dodawania danych program crashuje. | Rozwiązany | 27.12.2021 11:43 |
+| Po zmianie wyglądu na ładniejszy program crashuje. | Rozwiązany | 27.12.2021 13:12 |
+| Przy próbie dodania pustych danych program crashuje. | Rozwiązany | 27.12.2021 13:46 |
+| Podczas opuszczenia okienka wyboru daty bez jej <br>uprzedniego wybrania program crashuje. | Rozwiązany | 27.12.2021 23:36 |
+| Podczas szybkiego klikania w przycisk dodawania <br>danych program crashuje. | Rozwiązany | 27.12.2021 23:57 |
+| W momencie wejścia do jakiejkolwiek tabeli edycyjnej i zatwierdzenia<br> zmian bez wcześniejszego wprowadzenia takowych program crashuje. | Rozwiązany | 28.12.2021 00:22 |
+| W momencie kliknięcia przycisku do przywrócenia zmian <br>sprzed edycji program crashuje. | Rozwiązany | 28.12.2021 01:40 |
+| Po dodaniu panelu selektora program crashuje. | Rozwiązany | 28.12.2021 03:34 |
+| Po wybraniu dowolnej tabeli, wybraniu kolumny występującej tylko w tej tabeli, <br>a następnie zmiany tabeli można wykonać próbę selekcji z kolumny, która nie istnieje na skutek czego program crashuje. | Rozwiązany | 28.12.2021 04:14 |
+| Podczas próby wygenerowania danych z tabeli program crashuje. | Rozwiązany | 28.12.2021 05:54 |
+| W momencie kliknięcia przycisku eksportu danych, <br>gdy dane nie są jeszcze wygenerowane program crashuje. | Rozwiązany | 28.12.2021 17:24 |
+| Podczas próby eksportu danych program crashuje. | Rozwiązany | 28.12.2021 19:33 |
+| Podczas zmiany skrótu klawiszowego program crashuje. | Rozwiązany | 28.12.2021 21:12 |
+| Podczas szybkiego kliknięcia w przycisk eksportu danych, <br>gdy okno eksportu danych jest otwarte program crashuje. | Rozwiązany | 28.12.2021 22:37 |
+| Podczas próby importowania pliku z wadliwym delimiterem program crashuje. | Rozwiązany | 28.12.2021 23:56 |
+| Po próbie importu pliku z niepasującymi danymi program crashuje. | Rozwiązany | 29.12.2021 00:33 |
+| Podczas próby importowania pliku bez uprzedniego <br>wybrania tabeli program crashuje. | Rozwiązany | 29.12.2021 01:12 |
+| Podczas próby importu z typem importu "nadpisz" program crashuje. | Rozwiązany | 29.12.2021 02:46 |
+| Podczas użytkowania aplikacji poziom zużycia danych rośnie <br>aż w pewnym momencie program staje się niezdatny do użytkowania. | Rozwiązany | 29.12.2021 03:32 |
 ## Baza danych
 
 **W projekcie została wykorzystana baza danych z natępującymi tabelami**
